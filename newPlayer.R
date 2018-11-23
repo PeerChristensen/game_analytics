@@ -9,11 +9,13 @@ sql <- "SELECT eventName, eventDate
         FROM `tactile-external.interview.events` 
         WHERE eventName = 'newPlayer'"
 
-tb <- bq_project_query(billing, sql)
+#tb <- bq_project_query(billing, sql)
 
-df <- bq_table_download(tb)
+#df <- bq_table_download(tb)
 
-write_csv(df, "newPlayer.csv")
+#write_csv(df, "newPlayer.csv")
+
+df <- read_csv("newPlayer.csv")
 
 df %>% 
   group_by(eventDate) %>%
@@ -32,5 +34,5 @@ df %>%
 ggsave("newPlayer.png")
 
 df %>% 
-  +     group_by(eventDate) %>%
-  +     count() %>% summary(n)
+  group_by(eventDate) %>%
+   count() %>% summary(n)
