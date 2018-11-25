@@ -17,15 +17,12 @@ FROM `tactile-external.interview.events`"
 
 df <- read_csv("level_duration.csv")
 
-df %>% 
+df %<>% 
+  filter(levelId > 0, levelId < 281) %>%
   group_by(levelId) %>%
-  summarise(m = mean(missionSecondsPlayed)) %>%
-  filter(!levelId== 0 & !levelId== 291 & !levelId== 292) 
+  summarise(m = mean(missionSecondsPlayed,na.rm=T))
 
 duration <- df %>%
-  group_by(levelId) %>%
-  summarise(m = mean(missionSecondsPlayed)) %>%
-  filter(!levelId== 0 & !levelId== 291 & !levelId== 292) %>%
   mutate(part = factor(case_when(levelId >= 1   & levelId <= 50  ~ "1-50",
                                  levelId >= 51  & levelId <= 100 ~ "51-100",
                                  levelId >= 101 & levelId <= 150 ~ "101-150",
@@ -38,14 +35,13 @@ duration$part <- fct_relevel(duration$part, "1-50","51-100","101-150","151-200",
 #1-50
 duration %>%
   filter(part=="1-50") %>%
-  ggplot(aes(x=levelId,y=m)) +
-  geom_point() +
-  geom_line() + 
-  scale_y_continuous(labels = scales::percent) +
+  ggplot(aes(x = levelId, y = m)) +
+  geom_point(size=1) +
+  geom_line(size=1.5) + 
   theme_light() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16)) +
-  labs(y="Probability of completion") 
+  labs(y="mean duration in seconds") 
 
 ggsave("duration1.png",width= 18,height = 10)
 
@@ -53,13 +49,12 @@ ggsave("duration1.png",width= 18,height = 10)
 duration %>%
   filter(part=="51-100") %>%
   ggplot(aes(x=levelId,y=m)) +
-  geom_point() +
-  geom_line() + 
-  scale_y_continuous(labels = scales::percent) +
+  geom_point(size=1) +
+  geom_line(size=1.5) + 
   theme_light() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16)) +
-  labs(y="Probability of completion") 
+  labs(y="mean duration in seconds") 
 
 ggsave("duration2.png",width= 18,height = 10)
 
@@ -69,10 +64,9 @@ duration %>%
   ggplot(aes(x=levelId,y=m)) +
   geom_point() +
   geom_line() + 
-  scale_y_continuous(labels = scales::percent) +
   theme_light() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16)) +
-  labs(y="Probability of completion") 
+  labs(y="mean duration in seconds") 
 
 ggsave("duration3.png", width= 18,height = 10)

@@ -21,37 +21,37 @@ df <- read_csv("level_difficulty.csv")
 
 df %<>%
   group_by(userid) %>%
-  filter(userLevel == max(userLevel)) 
+  filter(levelId == max(levelId)) 
   
 df %>%
-  ggplot(aes(x=userLevel)) +
+  ggplot(aes(x=levelId)) +
   geom_density()
 
 # bars
 
 df %>%
   group_by(userid) %>%
-  filter(userLevel < 200) %>%
-  group_by(userLevel) %>%
+  filter(levelId < 200) %>%
+  group_by(levelId) %>%
   summarise(n = length(unique((userid)))) %>%
-  ggplot(aes(x=userLevel, y = n)) +
+  ggplot(aes(x=levelId, y = n)) +
   geom_col()
 
 top3 <- df %>%
-  group_by(userLevel) %>%
+  group_by(levelId) %>%
   summarise(n = length(unique((userid)))) %>%
   top_n(3,n)
 
 df %>%
   group_by(userid) %>%
-  filter(userLevel < 200) %>%
-  group_by(userLevel) %>%
+  filter(levelId < 200) %>%
+  group_by(levelId) %>%
   summarise(n = length(unique((userid)))) %>%
-  ggplot(aes(x=userLevel, y = n)) +
+  ggplot(aes(x=levelId, y = n)) +
   geom_col(fill="#C83488") +
   theme_light() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16)) +
-  annotate("label", x = top3$userLevel+5, y = top3$n, label = top3$userLevel, size = 6)
+  annotate("label", x = top3$levelId+5, y = top3$n, label = top3$levelId, size = 6)
 
 ggsave("last_levels.png")

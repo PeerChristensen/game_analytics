@@ -4,11 +4,11 @@ library(tidyverse)
 library(bigrquery)
 
 billing <- "testproj-223217"
-sql <- "SELECT userid, levelId, eventDate, eventName
+sql <- "SELECT userid, userLevel, eventDate, eventName
 FROM `tactile-external.interview.events`
-WHERE eventName = 'transaction'"
+WHERE eventName = 'transaction' limit 1000"
 
-#tb <- bq_project_query(billing, sql)
+tb <- bq_project_query(billing, sql)
 
 #df <- bq_table_download(tb)
 
