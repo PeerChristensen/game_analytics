@@ -72,7 +72,7 @@ retentionRate %>%
   theme_light() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16)) +
-  scale_colour_viridis_d(option="A", alpha=.8)
+  scale_colour_viridis_d(option="A", alpha=.8,name = "cohort")
 
 ggsave("retention_rate_all.png")
 
@@ -87,11 +87,29 @@ retentionRate %>%
   theme_minimal() +
   theme(axis.text  = element_text(size = 14),
         axis.title = element_text(size = 16),
-        axis.text.x = element_blank()) +
-  scale_colour_viridis_d(option="A", end=.9) +
+        axis.text.x = element_blank(),
+        panel.grid = element_blank()) +
+  scale_colour_viridis_d(option="A", end=.9, guide=F) +
   facet_wrap(~cohort)
 
 ggsave("retention_rate_facets.png")
+
+# retention table
+
+retentionRate %>%
+  ggplot(aes(x = day, y = reorder(cohort, desc(cohort)))) +
+  geom_raster(aes(fill = log(retention))) +
+  coord_equal(ratio = 1) +
+  geom_text(aes(label = glue::glue("{round(retention,0)}%")), size = 2, color = "snow") +
+  scale_fill_gradient(low="#330425",high="#C83488", guide=F) +
+  theme_light() +
+  theme(axis.text  = element_text(size = 14),
+        axis.title = element_text(size = 16),
+        panel.grid = element_blank(),
+        panel.border = element_blank()) +
+  labs(y= "cohort")
+
+ggsave("retention_table.png")
 
 # bars 1, 7 day retention
 
@@ -115,4 +133,6 @@ retentionBars %>%
   annotate("text", x =c(1,2), y = 10,label = c("53.9%", "20.7%"),size=12, colour = "snow")
   
 ggsave("retention_rate_bars.png")
+
+
 
