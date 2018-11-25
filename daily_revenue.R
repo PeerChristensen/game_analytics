@@ -8,11 +8,11 @@ sql <- "SELECT eventName, eventDate, productAmount
         FROM `tactile-external.interview.events`
         WHERE eventName = 'transaction'"
 
-tb <- bq_project_query(billing, sql)
+#tb <- bq_project_query(billing, sql)
 
-df <- bq_table_download(tb)
+#df <- bq_table_download(tb)
 
-write_csv(df,"daily_revenue.csv")
+#write_csv(df,"daily_revenue.csv")
 
 #################################
 
@@ -33,3 +33,5 @@ df %>%
   })
 
 ggsave("daily_revenue.png")
+
+range(df$d)

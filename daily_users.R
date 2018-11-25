@@ -32,6 +32,8 @@ df %>%
     paste0(trans, "K")
   })
 
+ggsave("daily_user.png")
+
 # average daily users: 82171
 df %>% 
   group_by(eventDate) %>%
