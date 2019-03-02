@@ -29,13 +29,14 @@ users <- df %>%
             wins      = length(eventName[eventName=="missionCompleted"]),
             coinsUsed = length(eventName[eventName=="coinsUsed"])) %>%
   mutate(probWin = wins/attempts,
-         probCoinUse = coinsUsed/attempts)
+         probCoinUse = log((coinsUsed+1)/attempts))
 
 # Distance
 dfScale <- users %>%
-  dplyr::select(probWin,probCoinUse) %>%
+  dplyr::select(probWin,probCoinUse,attempts) %>%
   mutate(probWin = scale(probWin),
-                   probCoinUse = scale(probCoinUse)) %>%
+         probCoinUse = scale(probCoinUse),
+         attempts = scale(attempts)) %>%
   data.frame()
 
 rownames(dfScale) <- as.character(seq(1,nrow(dfScale)))
@@ -46,7 +47,7 @@ rownames(dfScale) <- as.character(seq(1,nrow(dfScale)))
 fviz_nbclust(dfScale, kmeans)
 
 set.seed(324789)
-km.res <- kmeans(dfScale, 5, nstart = 25)
+km.res <- kmeans(dfScale, 2, nstart = 25)
 
 fviz_cluster(km.res, data = dfScale,
              ellipse.type = "convex",
